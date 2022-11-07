@@ -11,72 +11,78 @@ const alarmsContainer = document.querySelector(".alarms-container");
 let alarmManager;
 
 for (let i = 12; i > 0; i--) {
-  i = i < 10 ? `0${i}` : i;
-  let option = `<option value="${i}">${i}</option>`;
-  setHours.firstElementChild.insertAdjacentHTML("afterend", option);
+    i = i < 10 ? `0${i}` : i;
+    let option = `<option value="${i}">${i}</option>`;
+    setHours.firstElementChild.insertAdjacentHTML("afterend", option);
 }
 
 for (let i = 59; i >= 0; i--) {
-  i = i < 10 ? `0${i}` : i;
-  let option = `<option value="${i}">${i}</option>`;
-  setMinutes.firstElementChild.insertAdjacentHTML("afterend", option);
+    i = i < 10 ? `0${i}` : i;
+    let option = `<option value="${i}">${i}</option>`;
+    setMinutes.firstElementChild.insertAdjacentHTML("afterend", option);
 }
 
 window.addEventListener("DOMContentLoaded", (event) => {
-  // Update time on screen
-  setInterval(getCurrentTime, 1000);
+    // Update time on screen
+    setInterval(getCurrentTime, 1000);
 
-  // Initialize alarm manager
-  alarmManager = new AlarmManager();
+    // Initialize alarm manager
+    alarmManager = new AlarmManager();
 
-  // Set alarms from local storage if present
-  let alarms = getAlarmsFromLocalStorage();
-  if (alarms) {
-    alarms.forEach((alarm) => {
-      alarmManager.addAlarm(alarm.time, false, alarm.id);
-      displayAlarm(alarm.id, alarm.time);
-    });
-  }
+    // Set alarms from local storage if present
+    let alarms = getAlarmsFromLocalStorage();
+    if (alarms) {
+        alarms.forEach(alarm => {
+            alarmManager.addAlarm(alarm.time, false, alarm.id);
+            displayAlarm(alarm.id, alarm.time);
+        })
+    }
 });
 
 function displayAlarm(id, time) {
-  const alarmDiv = `
+    const alarmDiv = `
     <div class="alarm mb d-flex">
         <div class="time">${time}</div>
-        <div class="btn-wrapper">
-            <button class="snooze-btn" data-snooze-id=${id}>Snooze</button>
-            <button class="delete-btn" data-id=${id}>Delete</button>
-        </div>
+        <button class="snooze-btn" data-snooze-id=${id}>Snooze</button>
+        <button class="delete-btn" data-id=${id}>Delete</button>
     </div>
     `;
-  alarmsContainer.innerHTML += alarmDiv;
-  alarmsContainer
-    .querySelectorAll(`[data-id="${id}"]`)[0]
-    .addEventListener("click", (e) => {
-      const self = e.target;
-      const parent = self.parentElement.parentElement;
-      parent.remove();
-      alarmManager.deleteAlarm(e.target.dataset.id);
-    });
+    alarmsContainer.innerHTML += alarmDiv;
+    alarmsContainer.querySelectorAll(`[data-id="${id}"]`)[0]
+        .addEventListener("click", (e) => {
+            const self = e.target;
+            const parent = self.parentElement;
+            parent.remove();
+            alarmManager.deleteAlarm(e.target.dataset.id);
+        })
+
+    alarmsContainer.querySelectorAll(`[data-snooze-id="${id}"]`)[0]
+        .addEventListener("click", (e) => {
+            let newTime = alarmManager.snoozeAlarm(e.target.dataset.snoozeId);
+            const p = e.target.parentElement;
+            const timeDiv = p.firstElementChild;
+            timeDiv.innerHTML = newTime;
+        })
 }
 
+
 function getAlarmsFromLocalStorage() {
-  return JSON.parse(localStorage.getItem("alarms"));
+    return JSON.parse(localStorage.getItem("alarms"));
 }
 
 //   Displaying current time
 function getCurrentTime() {
-  currentTime.innerHTML = getCurrentHourMinuteSecondTime();
+    currentTime.innerHTML = getCurrentHourMinuteSecondTime();;
 }
 
 function getInput(e) {
-  e.preventDefault();
-  const hourValue = setHours.value;
-  const minuteValue = setMinutes.value;
-  const amPmValue = setAmPm.value;
-  const alarmTime = `${parseInt(hourValue)}:${minuteValue} ${amPmValue}`;
-  let alarm = alarmManager.addAlarm(alarmTime, true);
-  displayAlarm(alarm.id, alarm.time);
+    e.preventDefault();
+    const hourValue = setHours.value;
+    const minuteValue = setMinutes.value;
+    const amPmValue = setAmPm.value;
+    const alarmTime = `${parseInt(hourValue)}:${minuteValue} ${amPmValue}`
+    let alarm = alarmManager.addAlarm(alarmTime, true);
+    displayAlarm(alarm.id, alarm.time);
 }
 
 // Event Listener added to Set Alarm Button
