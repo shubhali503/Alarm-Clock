@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
 *{
     margin: 0;
     padding: 0;
@@ -13,6 +15,7 @@ body, .wrapper{
 body{
     height: 100vh;
     background-color: #343a40;
+    font-family: 'Poppins', sans-serif;
 }
 
 .wrapper{
@@ -30,7 +33,7 @@ body{
 
 .wrapper h1{
     font-size: 38px;
-    /* font-weight: 500; */
+    font-weight: 500;
     margin: 30px 0;
 }
 
@@ -75,6 +78,10 @@ body{
     background: #4A98F7;
   }
 
+  .set-alarm-btn:hover{
+    background: #3c84db;
+  }
+
   .show-alarms{
     width: 100%;
   }
@@ -101,7 +108,15 @@ body{
     background-color: #e5383b;
   }
 
+  .delete-btn:hover{
+    background-color: #c72d30;
+  }
+
   .snooze-btn{
-    background-color: #a7c957;
+    background-color: #7cb518;
     margin-right: 10px;
+  }
+
+  .snooze-btn:hover{
+    background-color: #6ea114;
   }
